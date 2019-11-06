@@ -1,6 +1,6 @@
 library(dplyr)
 #in github I removed my path, so insert yours
-pathdata <- file.path("C:/Users/teodor.kuznetsov/OneDrive/Documents/Rproject/UCI HAR Dataset")
+pathdata <- file.path("You path here")
 files <- list.files(pathdata, recursive=TRUE)
 # read train data
 xtrain <- read.table(file.path(pathdata, "train", "X_train.txt"))
