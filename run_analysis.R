@@ -17,27 +17,27 @@ features <- read.table(file.path(pathdata, "features.txt"))
 # read activity labels
 activity_labels <- read.table(file.path(pathdata, "activity_labels.txt"))
 
-#Create sanity and Column Values to the Train Data
+#create column values to the Train Data
 colnames(xtrain) <- features[,2]
 colnames(ytrain) <- "activityId"
 colnames(sub_train) <- "subjectId"
 
-#Create Sanity and column values to the test data
+#create column values to the test data
 colnames(xtest) <- features[,2]
 colnames(ytest) <- "activityId"
 colnames(sub_test) <- "subjectId"
 
-#Create sanity check for the activity labels value
+#Check for the activity labels value
 colnames(activity_labels) <- c('activityId','activityType')
 
-# Merges the training and the test sets to create one data set.
+#1. Merges the training and the test sets to create one data set.
 mrg_train <- cbind(ytrain, sub_train, xtrain)
 mrg_test <- cbind(ytest, sub_test, xtest)
 sub_total <- rbind(mrg_train, mrg_test)
 
 # 2. Extracts only the measurements on the mean and standard deviation for each measurement.
-# check all the values that are available
-col_names <- colnames(sub_total)
+
+col_names <- colnames(sub_total) # check all the values that are available
 mean_and_std <- (grepl("activityId" , col_names) 
                 | grepl("subjectId" , col_names) 
                 | grepl("mean.." , col_names) 
@@ -50,11 +50,12 @@ set_for_mean_and_std <- sub_total[ , mean_and_std == TRUE]
 set_activity_names <- merge(set_for_mean_and_std, activity_labels, 
                              by="activityId", all.x=TRUE)
 
-# New tidy set has to be created 
+#4. Appropriately labels the data set with descriptive variable names.
+#5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 tidy_set <- aggregate(. ~subjectId + activityId, set_activity_names, mean)
 tidy_set <- tidy_set[order(tidy_set$subjectId, tidy_set$activityId),]
 
-#The last step is to write the ouput to a text file 
+
 write.table(tidy_set, "TidySet.txt", row.name=FALSE)
 
 
